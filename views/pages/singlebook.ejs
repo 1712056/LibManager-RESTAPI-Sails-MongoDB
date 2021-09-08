@@ -1,0 +1,31 @@
+<div class="container">
+    <table id="books" class="display" style="width: 100%">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Title</th>
+          <th>Number of Pages</th>
+          <th>Author</th>
+          <th>Available</th>
+        </tr>
+      </thead>
+      <tbody>
+         <% %>
+        <tr>
+          <td><%= book.id %></td>
+          <td><%= book.title %></td>
+          <td><%= book.numOfPages %></td>
+          <td><%= book.author %></td>
+          <td><%= book.isAvailable %></td>
+        </tr>
+        <% %>
+      </tbody>
+    </table>
+  </div>
+  
+  <script>
+    $(document).ready(function () {
+      $("#books").DataTable();
+    });
+  </script>
+  

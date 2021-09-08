@@ -1,0 +1,56 @@
+
+<div class="container">
+  <table id="books" class="display" style="width: 100%">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Number of Pages</th>
+        <th>Author</th>
+        <th>Available</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <% books.forEach(function(book){ %>
+      <tr>
+        <td><%= book.id %></td>
+        <td><%= book.title %></td>
+        <td><%= book.numOfPages %></td>
+        <td><%= book.author %></td>
+        <td><%= book.isAvailable %></td>
+
+    
+      </tr>
+      <% })%>
+    </tbody>
+  </table>
+</div>
+<div class="container">
+  <h3>Add new book</h3>
+  <form method="post" action="/books">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" name="title">
+    </div>
+    <div class="mb-3">
+      <label for="numOfPages" class="form-label">Number of pages</label>
+      <input type="number" class="form-control" id="numOfPages" name="numOfPages">
+    </div>
+    <div class="mb-3">
+      <label for="author" class="form-label">Author</label>
+      <input type="text" class="form-control" id="author" name="author">
+    </div>
+    
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+
+
+<script>
+  $(document).ready(function () {
+    $("#books").DataTable();
+  });
+</script>
