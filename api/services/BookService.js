@@ -3,7 +3,12 @@
 const nodemailer = require("nodemailer");
 
 module.exports = {
-  getAllBooks: async function () {
+  /**
+   *
+   * @returns all books in library
+   */
+
+  async getAllBooks() {
     try {
       const books = await Book.find();
       return {
@@ -17,9 +22,15 @@ module.exports = {
       };
     }
   },
-  getSingleBook: async function (id) {
+
+  /**
+   *
+   * @param {string} id
+   * @returns a book
+   */
+  async getSingleBook(id) {
     try {
-      const book = await Book.findOne({ _id: id });
+      const book = await Book.findOne({ _id: id }).populate("chapters");
       if (book) {
         return {
           status: 200,
@@ -27,7 +38,7 @@ module.exports = {
         };
       }
       return {
-        status: 204,
+        status: 400,
       };
     } catch (e) {
       return {
@@ -36,16 +47,29 @@ module.exports = {
       };
     }
   },
-  addNewBook: async function (singleBook) {
+
+  /**
+   *
+   * @param {Object} singleBook info of a book
+   * @returns a new book
+   */
+  async addNewBook(singleBook) {
     try {
-      const { title, numOfPages, author, isAvailable } = singleBook;
+      const { title, numOfPages, author, isAvailable, chapters } = singleBook;
       const book = await Book.create({
         title: title,
         numOfPages: numOfPages,
         author: author,
         isAvailable: isAvailable,
       }).fetch();
-
+      for (let i = 0; i < chapters.length; i++) {
+        await Chapter.create({
+          number: i+1,
+          title: chapters[i].title,
+          page: chapters[i].page,
+          book: book.id,
+        }).fetch();
+      }
       if (book) {
         return {
           status: 201,
@@ -62,45 +86,64 @@ module.exports = {
       };
     }
   },
-  updateBook: async function (singleBook) {
-    try {
-      const { id, title, isAvailable } = singleBook;
-      if (isAvailable === true) {
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-          //host: "smtp.ethereal.email",
-          port: 1025,
-          ignoreTLS: true,
-          secure: false, // true for 465, false for other ports
-          auth: {
-            user: "", // generated ethereal user
-            pass: "", // generated ethereal password
-          },
-        });
 
-        // send mail with defined transport object
-        await transporter.sendMail({
-          from: '"Library Contact" smtp.ethereal.email', // sender address
-          to: "admin@malibrairie.com", // list of receivers
-          subject: "Borrow book", // Subject line
-          text: `You borrowed a book: ${title}`, // plain text body
-        });
+  /**
+   *
+   * @param {Object} unUpdateBook
+   * @param {Object} newUpdateBook
+   * @returns a updated book
+   */
+  async updateBook(unUpdateBook, newUpdateBook) {
+    try {
+      //muon sach
+      if (unUpdateBook.isAvailable === true) {
+        if (newUpdateBook.isAvailable === false) {
+          // create reusable transporter object using the default SMTP transport
+          let transporter = nodemailer.createTransport({
+            //host: "smtp.ethereal.email",
+            port: 1025,
+            ignoreTLS: true,
+            secure: false, // true for 465, false for other ports
+            auth: {
+              user: "", // generated ethereal user
+              pass: "", // generated ethereal password
+            },
+          });
+
+          // send mail with defined transport object
+          await transporter.sendMail({
+            from: '"Library Contact" smtp.ethereal.email', // sender address
+            to: "admin@malibrairie.com", // list of receivers
+            subject: "Borrow book", // Subject line
+            text: `You borrowed a book: ${newUpdateBook.title}`, // plain text body
+          });
+        }
       }
-      const updatedBook = await Book.updateOne({ _id: id }).set({
-        isAvailable: !isAvailable,
+      const updatedBook = await Book.updateOne({ _id: unUpdateBook.id }).set({
+        title: newUpdateBook.title,
+        numOfPages: newUpdateBook.numOfPages,
+        author: newUpdateBook.author,
+        isAvailable: newUpdateBook.isAvailable,
       });
+
       return { updatedBook };
     } catch (error) {
       return error;
     }
   },
-  deleteBook: async function (id) {
+
+  /**
+   *
+   * @param {string} id
+   * @returns
+   */
+  async deleteBook(id) {
     try {
       const destroyedBook = await Book.destroyOne({ _id: id });
 
       if (destroyedBook) {
         return {
-          status: 200,
+          status: 204,
           message: "delete successfully",
         };
       }

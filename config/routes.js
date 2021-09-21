@@ -12,33 +12,25 @@
 
 module.exports.routes = {
 
-  /***************************************************************************
-  *                                                                          *
-  * Make the view located at `views/homepage.ejs` your home page.            *
-  *                                                                          *
-  * (Alternatively, remove this and add an `index.html` file in your         *
-  * `assets` directory)                                                      *
-  *                                                                          *
-  ***************************************************************************/
+  //routes about books
   '/': { view: 'pages/homepage' },
-  'GET /books': {action:'Livre/getAllBooks'},
+  'GET /books':{action:'Livre/getAllBooks'},
   'GET /books/:id':{action:'Livre/getSingleBook'},
   'POST /books':{action:'Livre/addBook'},
   'PUT /books/:id':{action:'Livre/updateBook'},
-  'DELETE /books/:id':{action:'Livre/deleteBook'}
+  'DELETE /books/:id':{action:'Livre/deleteBook'},
 
+  //routes about authentication
+  'POST /users':{action:'User/signUp'},
+  'POST /auth':{action:'Auth/signIn'},
+  'POST /auth/actoken':{action:'Auth/getNewACToken'},
 
-
-  /***************************************************************************
-  *                                                                          *
-  * More custom routes here...                                               *
-  * (See https://sailsjs.com/config/routes for examples.)                    *
-  *                                                                          *
-  * If a request to a URL doesn't match any of the routes in this file, it   *
-  * is matched against "shadow routes" (e.g. blueprint routes).  If it does  *
-  * not match any of those, it is matched against static assets.             *
-  *                                                                          *
-  ***************************************************************************/
+  //routes about chapter
+  'GET /books/:id/chapters':{action:'Chapter/getAllChapters'},
+  'GET /books/:id/chapters/:number':{action:'Chapter/getChapter'},
+  'POST /books/:id/chapters':{action:'Chapter/addChapter'},
+  'PUT /books/:id/chapters/:number':{action:'Chapter/updateChapter'},
+  'DELETE /books/:id/chapters/:number':{action:'Chapter/deleteChapter'},
 
 
 };

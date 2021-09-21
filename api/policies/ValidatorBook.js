@@ -6,14 +6,15 @@ const validateBook = (book) => {
     title: Joi.string().min(1).max(100).required(),
     numOfPages: Joi.number().min(1).required(),
     author: Joi.string().min(1).required(),
-    
+    isAvailable: Joi.boolean().required(),
+    chapters: Joi.array(),
   });
-  return schema.validateAsync(book);
+  return schema.validate(book);
 };
-module.exports = async function Validator(req, res, next) {
-  
-  const { error } = await validateBook(req.body);
-  if (error) {
+module.exports = function Validator(req, res, next) {
+  const { error } =  validateBook(req.body);
+  if (error) { 
+    //HttpResponseService.json(res, 400, error.details[0].message) 
     return res.status(400).send(error.details[0].message);
   }
   next();

@@ -9,16 +9,12 @@
  */
 
 module.exports.policies = {
-
-  /***************************************************************************
-  *                                                                          *
-  * Default policy for all controllers and actions, unless overridden.       *
-  * (`true` allows public access)                                            *
-  *                                                                          *
-  ***************************************************************************/
-
-  // '*': true,
-  LivreController :{
-    addBook: 'ValidatorBook'
-  }
+  LivreController: {
+    addBook: ["isLoggedIn", "ValidatorBook"],
+    updateBook: ["isLoggedIn","ValidatorBook"],
+    deleteBook: ["isLoggedIn"],
+    addChapter: ["isLoggedIn"],
+    updateChapter: ["isLoggedIn"],
+    deleteChapter: ["isLoggedIn"],
+  },
 };

@@ -1,5 +1,6 @@
+/* eslint-disable linebreak-style */
 /**
- * Book.js
+ * Chapter.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
@@ -7,21 +8,15 @@
 
 module.exports = {
   attributes: {
+    number: { type: "number" },
     title: {
       type: "string",
     },
-    numOfPages: {
+    page: {
       type: "number",
     },
-    author: {
-      type: "string",
+    book: {
+      model: "book",
     },
-    isAvailable: {
-      type: 'boolean',
-    },
-    chapters:{
-      collection:'chapter',
-      via: 'book'
-    }
   },
 };

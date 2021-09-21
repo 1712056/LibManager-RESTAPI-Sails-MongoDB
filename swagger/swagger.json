@@ -29,7 +29,18 @@
       "description": "Sails blueprint actions for the **Book** model"
     },
     {
+      "name": "Chapter",
+      "description": "Sails blueprint actions for the **Chapter** model"
+    },
+    {
+      "name": "User",
+      "description": "Sails blueprint actions for the **User** model"
+    },
+    {
       "name": "Livre"
+    },
+    {
+      "name": "Auth"
     }
   ],
   "components": {
@@ -69,9 +80,97 @@
             "type": "string"
           },
           "isAvailable": {
-            "type": "boolean",
-            "default": true,
-            "example": true
+            "type": "boolean"
+          },
+          "chapters": {
+            "description": "Array of **chapter**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/chapter"
+            }
+          }
+        }
+      },
+      "chapter": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/chapter-without-required-constraint"
+          }
+        ]
+      },
+      "chapter-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Chapter**",
+        "properties": {
+          "createdAt": {
+            "type": "number",
+            "format": "double"
+          },
+          "updatedAt": {
+            "type": "number",
+            "format": "double"
+          },
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": {
+            "type": "string"
+          },
+          "page": {
+            "type": "number",
+            "format": "double"
+          },
+          "book": {
+            "description": "JSON dictionary representing the **book** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/book"
+              }
+            ]
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/user-without-required-constraint"
+          }
+        ]
+      },
+      "user-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **User**",
+        "properties": {
+          "createdAt": {
+            "type": "number",
+            "format": "double"
+          },
+          "updatedAt": {
+            "type": "number",
+            "format": "double"
+          },
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rfToken": {
+            "type": "string"
           }
         }
       }
@@ -86,6 +185,26 @@
           "uniqueItems": true
         },
         "description": "The desired **Book** record's primary key value"
+      },
+      "ModelPKParam-chapter": {
+        "in": "path",
+        "name": "_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "description": "The desired **Chapter** record's primary key value"
+      },
+      "ModelPKParam-user": {
+        "in": "path",
+        "name": "_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "description": "The desired **User** record's primary key value"
       },
       "AttributeFilterParam": {
         "in": "query",
@@ -158,6 +277,66 @@
         "summary": "/books",
         "tags": [
           "Livre"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "/users",
+        "tags": [
+          "User"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "summary": "/auth",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/auth/actoken": {
+      "post": {
+        "summary": "/auth/actoken",
+        "tags": [
+          "Auth"
         ],
         "parameters": [],
         "responses": {
@@ -259,6 +438,177 @@
         }
       }
     },
+    "/books/{_id}/chapters": {
+      "get": {
+        "summary": "/books/{_id}/chapters",
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `_id`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "/books/{_id}/chapters",
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `_id`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/books/{_id}/chapters/{number}": {
+      "get": {
+        "summary": "/books/{_id}/chapters/{number}",
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `_id`"
+          },
+          {
+            "in": "path",
+            "name": "number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `number`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "/books/{_id}/chapters/{number}",
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `_id`"
+          },
+          {
+            "in": "path",
+            "name": "number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `number`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "/books/{_id}/chapters/{number}",
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `_id`"
+          },
+          {
+            "in": "path",
+            "name": "number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `number`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/book/find": {
       "get": {
         "summary": "List Book (find where) *",
@@ -292,7 +642,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable"
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -302,9 +652,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable"
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,chapters"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -351,7 +711,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable"
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -361,9 +721,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable"
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,chapters"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -448,10 +818,20 @@
             "in": "query",
             "name": "isAvailable",
             "schema": {
-              "type": "boolean",
-              "default": true,
-              "example": true
+              "type": "boolean"
             }
+          },
+          {
+            "in": "query",
+            "name": "chapters",
+            "schema": {
+              "description": "Array of **chapter**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/chapter"
+              }
+            },
+            "description": "Array of **chapter**'s or array of FK's when creating / updating / not populated"
           }
         ],
         "responses": {
@@ -542,10 +922,20 @@
             "in": "query",
             "name": "isAvailable",
             "schema": {
-              "type": "boolean",
-              "default": true,
-              "example": true
+              "type": "boolean"
             }
+          },
+          {
+            "in": "query",
+            "name": "chapters",
+            "schema": {
+              "description": "Array of **chapter**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/chapter"
+              }
+            },
+            "description": "Array of **chapter**'s or array of FK's when creating / updating / not populated"
           }
         ],
         "responses": {
@@ -607,6 +997,913 @@
         }
       }
     },
+    "/book/{_id}/{association}/add/{childid}": {
+      "get": {
+        "summary": "Add to for Book *",
+        "description": "Add a foreign record to one of this **Book** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "Book"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-book"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "chapters"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Book** record's foreign key values to use as the replacement for this collection (**chapters** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Book** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **Book** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/book/{_id}/{association}/replace": {
+      "get": {
+        "summary": "Replace for Book *",
+        "description": "Replace all of the child records in one of this **Book** record's associations.\n\nOnly one of the query parameters, that matches the **association** path parameter, should be specified.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "Book"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-book"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "chapters"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "query",
+            "name": "chapters",
+            "description": "**Book** record's foreign key values to use as the replacement for this collection (**chapters** association)",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "**Book** record's foreign key values to use as the replacement for this collection (**chapters** association)",
+                "uniqueItems": true
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Book** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **Book** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/book/{_id}/{association}/remove/{childid}": {
+      "get": {
+        "summary": "Remove from for Book *",
+        "description": "Remove a foreign record from one of this **Book** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "Book"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-book"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "chapters"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Book** record's foreign key values to use as the replacement for this collection (**chapters** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Book** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **Book** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/chapter/find": {
+      "get": {
+        "summary": "List Chapter (find where) *",
+        "description": "Find a list of **Chapter** records that match the specified criteria.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttributeFilterParam"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,book"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a paged list of **Chapter** records that match the specified criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/chapter"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/chapter/find/{_id}": {
+      "get": {
+        "summary": "Get Chapter (find one) *",
+        "description": "Look up the **Chapter** record with the specified ID.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-chapter"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,book"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a single **Chapter** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chapter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response denoting **Chapter** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/chapter/create": {
+      "get": {
+        "summary": "Create Chapter *",
+        "description": "Create a new **Chapter** record.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "createdAt",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updatedAt",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "uniqueItems": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "number",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "book",
+            "schema": {
+              "description": "JSON dictionary representing the **book** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/book"
+                }
+              ]
+            },
+            "description": "JSON dictionary representing the **book** instance or FK when creating / updating / not populated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the newly created **Chapter** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chapter"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/chapter/update/{_id}": {
+      "get": {
+        "summary": "Update Chapter *",
+        "description": "Update an existing **Chapter** record.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-chapter"
+          },
+          {
+            "in": "query",
+            "name": "createdAt",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updatedAt",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "uniqueItems": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "number",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "book",
+            "schema": {
+              "description": "JSON dictionary representing the **book** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/book"
+                }
+              ]
+            },
+            "description": "JSON dictionary representing the **book** instance or FK when creating / updating / not populated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Chapter** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chapter"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Cannot update, **Chapter** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/chapter/destroy/{_id}": {
+      "get": {
+        "summary": "Delete Chapter (destroy) *",
+        "description": "Delete the **Chapter** record with the specified ID.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-chapter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the destroyed **Chapter** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chapter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot destroy, **Chapter** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/find": {
+      "get": {
+        "summary": "List User (find where) *",
+        "description": "Find a list of **User** records that match the specified criteria.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttributeFilterParam"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,username,password,name,rfToken"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,username,password,name,rfToken"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a paged list of **User** records that match the specified criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/user"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/find/{_id}": {
+      "get": {
+        "summary": "Get User (find one) *",
+        "description": "Look up the **User** record with the specified ID.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-user"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,username,password,name,rfToken"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,username,password,name,rfToken"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a single **User** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response denoting **User** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/create": {
+      "get": {
+        "summary": "Create User *",
+        "description": "Create a new **User** record.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "createdAt",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updatedAt",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "uniqueItems": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "username",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "password",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rfToken",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the newly created **User** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/update/{_id}": {
+      "get": {
+        "summary": "Update User *",
+        "description": "Update an existing **User** record.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-user"
+          },
+          {
+            "in": "query",
+            "name": "createdAt",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updatedAt",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "uniqueItems": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "username",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "password",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rfToken",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **User** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Cannot update, **User** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/destroy/{_id}": {
+      "get": {
+        "summary": "Delete User (destroy) *",
+        "description": "Delete the **User** record with the specified ID.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the destroyed **User** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot destroy, **User** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/book": {
       "get": {
         "summary": "List Book (find where)",
@@ -640,7 +1937,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable"
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -650,9 +1947,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable"
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,chapters"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -743,7 +2050,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable"
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -753,9 +2060,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable"
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,chapters"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -853,6 +2170,896 @@
           },
           "404": {
             "description": "Cannot destroy, **Book** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/book/{_id}/{association}/{childid}": {
+      "put": {
+        "summary": "Add to for Book",
+        "description": "Add a foreign record to one of this **Book** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "Book"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-book"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "chapters"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Book** record's foreign key values to use as the replacement for this collection (**chapters** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Book** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **Book** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove from for Book",
+        "description": "Remove a foreign record from one of this **Book** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "Book"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-book"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "chapters"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Book** record's foreign key values to use as the replacement for this collection (**chapters** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Book** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **Book** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/book/{_id}/{association}": {
+      "put": {
+        "summary": "Replace for Book",
+        "description": "Replace all of the child records in one of this **Book** record's associations.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "Book"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-book"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "chapters"
+              ]
+            },
+            "description": "The name of the association"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Book** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **Book** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "The primary key values (usually IDs) of the child records to use as the new members of this collection",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "**Book** record's foreign key values to use as the replacement for this collection (**chapters** association)",
+                      "uniqueItems": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Populate association for Book",
+        "description": "Populate and return foreign record(s) for the given association of this **Book** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/populate-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/populate-where"
+        },
+        "tags": [
+          "Book"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-book"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "chapters"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,title,numOfPages,author,isAvailable,chapters"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the list of associated records as JSON dictionaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/chapter"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot populate, **Book** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/chapter": {
+      "get": {
+        "summary": "List Chapter (find where)",
+        "description": "Find a list of **Chapter** records that match the specified criteria.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttributeFilterParam"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,book"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a paged list of **Chapter** records that match the specified criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/chapter"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Chapter",
+        "description": "Create a new **Chapter** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the newly created **Chapter** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chapter"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "JSON dictionary representing the Chapter instance to create.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/chapter"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chapter/{_id}": {
+      "get": {
+        "summary": "Get Chapter (find one)",
+        "description": "Look up the **Chapter** record with the specified ID.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-chapter"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,book"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a single **Chapter** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chapter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response denoting **Chapter** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Chapter",
+        "description": "Update an existing **Chapter** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-chapter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Chapter** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chapter"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Cannot update, **Chapter** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "JSON dictionary representing the Chapter instance to update.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/chapter-without-required-constraint"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Chapter (destroy)",
+        "description": "Delete the **Chapter** record with the specified ID.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-chapter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the destroyed **Chapter** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chapter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot destroy, **Chapter** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/chapter/{_id}/{association}": {
+      "get": {
+        "summary": "Populate association for Chapter",
+        "description": "Populate and return foreign record(s) for the given association of this **Chapter** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/populate-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/populate-where"
+        },
+        "tags": [
+          "Chapter"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-chapter"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "book"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,number,title,page,book"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the list of associated records as JSON dictionaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/book"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot populate, **Chapter** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "summary": "List User (find where)",
+        "description": "Find a list of **User** records that match the specified criteria.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttributeFilterParam"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,username,password,name,rfToken"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,username,password,name,rfToken"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a paged list of **User** records that match the specified criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/user"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create User",
+        "description": "Create a new **User** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the newly created **User** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "JSON dictionary representing the User instance to create.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{_id}": {
+      "get": {
+        "summary": "Get User (find one)",
+        "description": "Look up the **User** record with the specified ID.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-user"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,username,password,name,rfToken"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "createdAt,updatedAt,id,username,password,name,rfToken"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a single **User** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response denoting **User** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update User",
+        "description": "Update an existing **User** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **User** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Cannot update, **User** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "JSON dictionary representing the User instance to update.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user-without-required-constraint"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete User (destroy)",
+        "description": "Delete the **User** record with the specified ID.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
+        },
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-user"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the destroyed **User** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot destroy, **User** record with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"
