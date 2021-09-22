@@ -13,8 +13,10 @@ module.exports.policies = {
     addBook: ["isLoggedIn", "ValidatorBook"],
     updateBook: ["isLoggedIn","ValidatorBook"],
     deleteBook: ["isLoggedIn"],
+  },
+  ChapterController: {
     addChapter: ["isLoggedIn"],
     updateChapter: ["isLoggedIn"],
     deleteChapter: ["isLoggedIn"],
-  },
+  }
 };

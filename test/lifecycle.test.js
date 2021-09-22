@@ -1,39 +1,52 @@
 /* eslint-disable linebreak-style */
-var sails = require('sails');
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable linebreak-style */
+var sails = require("sails");
 const supertest = require("supertest");
-
 // Before running any tests...
-before(function(done) {
-
+before(function (done) {
   // Increase the Mocha timeout so that Sails has enough time to lift, even if you have a bunch of assets.
   this.timeout(100000);
 
-  sails.lift({
-    // Your Sails app's configuration files will be loaded automatically,
-    // but you can also specify any other special overrides here for testing purposes.
+  sails.lift(
+    {
+      // Your Sails app's configuration files will be loaded automatically,
+      // but you can also specify any other special overrides here for testing purposes.
 
-    // For example, we might want to skip the Grunt hook,
-    // and disable all logs except errors and warnings:
-    hooks: { grunt: false },
-    log: { level: 'warn' },
-    
-    
-  }, function(err) {
-    if (err) { return done(err); }
+      // For example, we might want to skip the Grunt hook,
+      // and disable all logs except errors and warnings:
+      hooks: { grunt: false },
+      log: { level: "warn" },
+    },
+    function (err) {
+      if (err) {
+        return done(err);
+      }
 
-    // here you can load fixtures, etc.
-    // (for example, you might want to create some records in the database)
+      // here you can load fixtures, etc.
+      // (for example, you might want to create some records in the database)
 
-    return done();
-  });
+      let user = {
+        username: "nvh",
+        password: "123",
+      };
+      supertest(sails.hooks.http.app)
+        .post("/auth")
+        .send(user)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) return done(err);
+          sails.config.globals.accessToken = res.body.data.accessToken;
+        });
+      return done();
+    }
+  );
 });
 
 // After all tests have finished...
-after(function(done) {
-
+after(function (done) {
   // here you can clear fixtures, etc.
   // (e.g. you might want to destroy the records you created above)
 
   sails.lower(done);
-
 });

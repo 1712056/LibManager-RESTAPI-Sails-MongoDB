@@ -17,47 +17,47 @@ describe("LivreController", function () {
     });
   });
 
-  describe("getAccessToken", function () {
-    let user = {
-      username: "nvh1999",
-      password: "123",
-    };
-    it("should return the access token", function (done) {
-      supertest(sails.hooks.http.app)
-        .post("/auth")
-        .send(user)
-        .expect(200)
-        .end(function (err, res) {
-          if (err) return done(err);
-          sails.config.globals.accessToken = res.body.data.accessToken;
-          done();
-        });
-    });
-    it("should not return the access token with invalid username", function (done) {
-      const cloneUser = _.cloneDeep(user);
-      cloneUser.username = "aaa";
-      supertest(sails.hooks.http.app)
-        .post("/auth")
-        .send(cloneUser)
-        .expect(401)
-        .end(function (err, res) {
-          if (err) return done(err);
-          done();
-        });
-    });
-    it("should not return the access token with invalid password", function (done) {
-      const cloneUser = _.cloneDeep(user);
-      cloneUser.password = "1111";
-      supertest(sails.hooks.http.app)
-        .post("/auth")
-        .send(cloneUser)
-        .expect(401)
-        .end(function (err, res) {
-          if (err) return done(err);
-          done();
-        });
-    });
-  });
+  // describe("getAccessToken", function () {
+  //   let user = {
+  //     username: "nvh1999",
+  //     password: "123",
+  //   };
+  //   it("should return the access token", function (done) {
+  //     supertest(sails.hooks.http.app)
+  //       .post("/auth")
+  //       .send(user)
+  //       .expect(200)
+  //       .end(function (err, res) {
+  //         if (err) return done(err);
+  //         sails.config.globals.accessToken = res.body.data.accessToken;
+  //         done();
+  //       });
+  //   });
+  //   it("should not return the access token with invalid username", function (done) {
+  //     const cloneUser = _.cloneDeep(user);
+  //     cloneUser.username = "aaa";
+  //     supertest(sails.hooks.http.app)
+  //       .post("/auth")
+  //       .send(cloneUser)
+  //       .expect(401)
+  //       .end(function (err, res) {
+  //         if (err) return done(err);
+  //         done();
+  //       });
+  //   });
+  //   it("should not return the access token with invalid password", function (done) {
+  //     const cloneUser = _.cloneDeep(user);
+  //     cloneUser.password = "1111";
+  //     supertest(sails.hooks.http.app)
+  //       .post("/auth")
+  //       .send(cloneUser)
+  //       .expect(401)
+  //       .end(function (err, res) {
+  //         if (err) return done(err);
+  //         done();
+  //       });
+  //   });
+  // });
 
   describe("addBook", function () {
     let payload = {
